@@ -188,4 +188,21 @@ public final class StringUtils {
         }
         return new String(chars);
     }
+    /**
+     *首字母大写
+     * capitalize first letter
+
+     * @param str
+     * @return
+     */
+    public static String capitalizeFirstLetter(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+
+        char c = str.charAt(0);
+        return (!Character.isLetter(c) || Character.isUpperCase(c)) ? str : new StringBuilder(str.length())
+                .append(Character.toUpperCase(c)).append(str.substring(1)).toString();
+    }
+
 }

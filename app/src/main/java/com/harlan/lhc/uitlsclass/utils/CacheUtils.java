@@ -1,3 +1,5 @@
+package com.harlan.lhc.uitlsclass.utils;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,9 +11,6 @@ import android.os.Parcelable;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
-
-import com.harlan.lhc.uitlsclass.utils.CloseUtils;
-import com.harlan.lhc.uitlsclass.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
