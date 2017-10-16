@@ -12,11 +12,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * <pre>
@@ -716,4 +719,126 @@ public final class AppUtils {
         }
         return true;
     }
+    /**
+     * 根据key获取xml中Meta的值
+     * @param context 上下文
+     * @param key
+     * @return
+     */
+    public static String getMetaData(Context context, String key) {
+        String value = "";
+
+        try {
+            ApplicationInfo e = context.getPackageManager().getApplicationInfo(context.getPackageName(), 128);
+            if(null != e) {
+                Bundle metaData = e.metaData;
+                if(null != metaData) {
+                    value = metaData.getString(key);
+                    if(null == value || value.length() == 0) {
+                        value = "";
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException var5) {
+            var5.printStackTrace();
+        }
+
+        return value;
+    }
+    /**
+     * 获取应用第一次安装日期
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static long getAppFirstInstallTime(Context context, String packageName) {
+        long lastUpdateTime = 0;
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            lastUpdateTime = packageInfo.firstInstallTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lastUpdateTime;
+    }
+    /**
+     * 获取应用更新日期
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static long getAppLastUpdateTime(Context context, String packageName) {
+        long lastUpdateTime = 0;
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            lastUpdateTime = packageInfo.lastUpdateTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lastUpdateTime;
+    }
+    /**
+     * 获取应用大小
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static long getAppSize(Context context, String packageName) {
+        long appSize = 0;
+        try {
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            appSize = new File(applicationInfo.sourceDir).length();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return appSize;
+    }
+    /**
+     * 获取应用的安装市场
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static String getAppInstaller(Context context, String packageName) {
+        return context.getPackageManager().getInstallerPackageName(packageName);
+    }
+    /**
+     * 获取应用uid
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public static int getAppUid(Context context, String packageName) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+            return applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 获取Cpu内核数
+     * @return
+     */
+    public static int getNumCores() {
+        try {
+            File dir = new File("/sys/devices/system/cpu/");
+            File[] files = dir.listFiles(new FileFilter() {
+
+                @Override
+                public boolean accept(File pathname) {
+                    return Pattern.matches("cpu[0-9]", pathname.getName());
+                }
+
+            });
+            return files.length;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+
 }

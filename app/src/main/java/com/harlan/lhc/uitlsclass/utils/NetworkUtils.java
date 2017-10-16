@@ -1,4 +1,5 @@
 package com.harlan.lhc.uitlsclass.utils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -340,4 +341,83 @@ public final class NetworkUtils {
             return null;
         }
     }
+    /**
+     * 检测3G是否连接
+     *
+     * @param context 上下文
+     * @return 结果
+     */
+    public static boolean is3gConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            if (networkInfo != null
+                    && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * 判断当前网络是否正在断开
+     *
+     * @param context 上下文
+     * @return 当前网络是否正在断开
+     */
+    public static boolean isDisconnectingByState(Context context) {
+        return getCurrentNetworkState(context) ==
+                NetworkInfo.State.DISCONNECTING;
+    }
+    /**
+     * 获取当前网络的状态
+     *
+     * @param context 上下文
+     * @return 当前网络的状态。具体类型可参照NetworkInfo.State.CONNECTED、NetworkInfo.State.CONNECTED.DISCONNECTED等字段。当前没有网络连接时返回null
+     */
+    public static NetworkInfo.State getCurrentNetworkState(Context context) {
+        NetworkInfo networkInfo
+                = ((ConnectivityManager) context.getSystemService(
+                Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        return networkInfo != null ? networkInfo.getState() : null;
+    }
+
+
+    /**
+     * 判断当前网络是否正在连接
+     *
+     * @param context 上下文
+     * @return 当前网络是否正在连接
+     */
+    public static boolean isConnectingByState(Context context) {
+        return getCurrentNetworkState(context) == NetworkInfo.State.CONNECTING;
+    }
+    /**
+     * 判断当前网络是否已经断开
+     *
+     * @param context 上下文
+     * @return 当前网络是否已经断开
+     */
+    public static boolean isDisconnectedByState(Context context) {
+        return getCurrentNetworkState(context) ==
+                NetworkInfo.State.DISCONNECTED;
+    }
+    /**
+     * 判断当前网络是否已经暂停
+     *
+     * @param context 上下文
+     * @return 当前网络是否已经暂停
+     */
+    public static boolean isSuspendedByState(Context context) {
+        return getCurrentNetworkState(context) == NetworkInfo.State.SUSPENDED;
+    }
+    /**
+     * 判断当前网络是否处于未知状态中
+     *
+     * @param context 上下文
+     * @return 当前网络是否处于未知状态中
+     */
+    public static boolean isUnknownByState(Context context) {
+        return getCurrentNetworkState(context) == NetworkInfo.State.UNKNOWN;
+    }
+
 }
